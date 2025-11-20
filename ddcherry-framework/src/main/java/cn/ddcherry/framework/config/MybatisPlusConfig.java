@@ -1,42 +1,41 @@
 package cn.ddcherry.framework.config;
 
-import com.baomidou.mybatisplus.core.handlers.MetaObjectHandler;
+import cn.ddcherry.framework.mybatis.datascope.DataScopePermissionHandler;
+import com.baomidou.mybatisplus.autoconfigure.MybatisPlusPropertiesCustomizer;
+import com.baomidou.mybatisplus.core.config.GlobalConfig;
+import com.baomidou.mybatisplus.annotation.DbType;
 import com.baomidou.mybatisplus.extension.plugins.MybatisPlusInterceptor;
+import com.baomidou.mybatisplus.extension.plugins.inner.DataPermissionInterceptor;
 import com.baomidou.mybatisplus.extension.plugins.inner.PaginationInnerInterceptor;
-import org.apache.ibatis.reflection.MetaObject;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-import java.time.LocalDateTime;
+import java.util.Optional;
 
 /**
- * MyBatis-Plus configuration, including pagination and auto fill handler.
+ * MyBatis-Plus configuration, registering pagination、数据权限、逻辑删除等全局能力。
  */
 @Configuration
 public class MybatisPlusConfig {
 
     @Bean
-    public MybatisPlusInterceptor mybatisPlusInterceptor() {
+    public MybatisPlusInterceptor mybatisPlusInterceptor(DataScopePermissionHandler dataScopePermissionHandler) {
         MybatisPlusInterceptor interceptor = new MybatisPlusInterceptor();
-        interceptor.addInnerInterceptor(new PaginationInnerInterceptor());
+        interceptor.addInnerInterceptor(new DataPermissionInterceptor(dataScopePermissionHandler));
+        interceptor.addInnerInterceptor(new PaginationInnerInterceptor(DbType.MYSQL));
         return interceptor;
     }
 
     @Bean
-    public MetaObjectHandler metaObjectHandler() {
-        return new SimpleMetaObjectHandler();
-    }
-
-    static class SimpleMetaObjectHandler implements MetaObjectHandler {
-        @Override
-        public void insertFill(MetaObject metaObject) {
-            strictInsertFill(metaObject, "createTime", LocalDateTime::now, LocalDateTime.class);
-            strictInsertFill(metaObject, "updateTime", LocalDateTime::now, LocalDateTime.class);
-        }
-
-        @Override
-        public void updateFill(MetaObject metaObject) {
-            strictUpdateFill(metaObject, "updateTime", LocalDateTime::now, LocalDateTime.class);
-        }
+    public MybatisPlusPropertiesCustomizer mybatisPlusPropertiesCustomizer() {
+        return properties -> {
+            GlobalConfig globalConfig = Optional.ofNullable(properties.getGlobalConfig()).orElseGet(GlobalConfig::new);
+            GlobalConfig.DbConfig dbConfig = Optional.ofNullable(globalConfig.getDbConfig()).orElseGet(GlobalConfig.DbConfig::new);
+            dbConfig.setLogicDeleteField("delFlag");
+            dbConfig.setLogicDeleteValue("1");
+            dbConfig.setLogicNotDeleteValue("0");
+            globalConfig.setDbConfig(dbConfig);
+            properties.setGlobalConfig(globalConfig);
+        };
     }
 }

@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.ddcherry.gen.mapper.GenTableMapper">
+    <!--
+        查询指定表的字段列表，包含主键、自增、必填标识等信息。
+    -->
+    <select id="selectTableColumns" resultType="cn.ddcherry.gen.domain.GenTableColumn">
+        SELECT
+            column_name     AS columnName,
+            column_comment  AS columnComment,
+            column_type     AS columnType,
+            CASE WHEN column_key = 'PRI' THEN '1' ELSE '0' END AS isPk,
+            CASE WHEN is_nullable = 'NO' THEN '1' ELSE '0' END AS isRequired,
+            CASE WHEN extra = 'auto_increment' THEN '1' ELSE '0' END AS isIncrement
+        FROM information_schema.columns
+        WHERE table_schema = (SELECT DATABASE())
+          AND table_name = #{tableName}
+        ORDER BY ordinal_position
+    </select>
+
+    <!--
+        查询尚未导入到代码生成配置中的业务表。
+    -->
+    <select id="selectUnimportedTables" resultType="cn.ddcherry.gen.domain.DatabaseTable">
+        SELECT
+            table_name     AS tableName,
+            table_comment  AS tableComment,
+            create_time    AS createTime
+        FROM information_schema.tables
+        WHERE table_schema = (SELECT DATABASE())
+          AND table_name NOT IN (SELECT table_name FROM gen_table)
+        ORDER BY table_name
+    </select>
+</mapper>

@@ -1,35 +1,31 @@
 package cn.ddcherry.gen.mapper;
 
+import cn.ddcherry.gen.domain.DatabaseTable;
+import cn.ddcherry.gen.domain.GenTable;
 import cn.ddcherry.gen.domain.GenTableColumn;
+import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import org.apache.ibatis.annotations.Mapper;
-import org.apache.ibatis.annotations.Select;
 
 import java.util.List;
 
 /**
- * Mapper for generator metadata.
+ * Mapper for generator metadata and database table information.
  */
 @Mapper
-public interface GenTableMapper {
+public interface GenTableMapper extends BaseMapper<GenTable> {
 
     /**
-     * 查询指定表的字段列表
+     * 查询指定表的字段列表。
      *
      * @param tableName 数据表名
      * @return 字段集合
      */
-    @Select({
-        "SELECT",
-        "    column_name   AS columnName,",
-        "    column_comment AS columnComment,",
-        "    column_type   AS columnType,",
-        "    CASE WHEN column_key = 'PRI' THEN '1' ELSE '0' END AS isPk,",
-        "    CASE WHEN is_nullable = 'NO' THEN '1' ELSE '0' END AS isRequired,",
-        "    CASE WHEN extra = 'auto_increment' THEN '1' ELSE '0' END AS isIncrement",
-        "FROM information_schema.columns",
-        "WHERE table_schema = (SELECT DATABASE())",
-        "  AND table_name = #{tableName}",
-        "ORDER BY ordinal_position"
-    })
     List<GenTableColumn> selectTableColumns(String tableName);
+
+    /**
+     * 查询未导入代码生成的业务表。
+     *
+     * @return 数据库中尚未存在于 gen_table 表的表清单
+     */
+    List<DatabaseTable> selectUnimportedTables();
 }

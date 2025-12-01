@@ -32,7 +32,7 @@ ddcherry:
       format-sql: true
     scan-base-package: cn.ddcherry
 server:
-  port: 8080
+  port: 8100
 management:
   endpoints:
     web:

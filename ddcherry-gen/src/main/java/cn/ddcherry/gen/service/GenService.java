@@ -1,6 +1,7 @@
 package cn.ddcherry.gen.service;
 
 import cn.ddcherry.gen.domain.GenTableColumn;
+import cn.ddcherry.gen.domain.TableMetadata;
 
 import java.util.List;
 import java.util.Map;
@@ -18,4 +19,11 @@ public interface GenService {
      * @return 字段列表
      */
     List<GenTableColumn> listTableColumns(String tableName);
+
+    /**
+     * 查询当前数据库的表列表
+     *
+     * @return 表信息集合
+     */
+    List<TableMetadata> listTables();
 }

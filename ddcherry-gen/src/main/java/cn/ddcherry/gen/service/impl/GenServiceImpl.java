@@ -2,6 +2,7 @@ package cn.ddcherry.gen.service.impl;
 
 import cn.ddcherry.gen.constant.GenConstants;
 import cn.ddcherry.gen.domain.GenTableColumn;
+import cn.ddcherry.gen.domain.TableMetadata;
 import cn.ddcherry.gen.mapper.GenTableMapper;
 import cn.ddcherry.gen.service.GenService;
 import cn.ddcherry.gen.template.TemplateRenderer;
@@ -39,6 +40,11 @@ public class GenServiceImpl implements GenService {
         List<GenTableColumn> columns = genTableMapper.selectTableColumns(tableName);
         columns.forEach(this::prepareColumnDefaults);
         return columns;
+    }
+
+    @Override
+    public List<TableMetadata> listTables() {
+        return genTableMapper.selectTables();
     }
 
     private void prepareColumnDefaults(GenTableColumn column) {

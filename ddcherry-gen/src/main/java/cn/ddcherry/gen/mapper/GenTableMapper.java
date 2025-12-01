@@ -1,6 +1,7 @@
 package cn.ddcherry.gen.mapper;
 
 import cn.ddcherry.gen.domain.GenTableColumn;
+import cn.ddcherry.gen.domain.TableMetadata;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
 
@@ -32,4 +33,21 @@ public interface GenTableMapper {
         "ORDER BY ordinal_position"
     })
     List<GenTableColumn> selectTableColumns(String tableName);
+
+    /**
+     * 查询当前数据库的所有表及元数据
+     *
+     * @return 表信息集合
+     */
+    @Select({
+        "SELECT",
+        "    table_name    AS tableName,",
+        "    table_comment AS tableComment,",
+        "    create_time   AS createTime,",
+        "    update_time   AS updateTime",
+        "FROM information_schema.tables",
+        "WHERE table_schema = (SELECT DATABASE())",
+        "ORDER BY table_name"
+    })
+    List<TableMetadata> selectTables();
 }

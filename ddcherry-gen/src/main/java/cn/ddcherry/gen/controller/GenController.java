@@ -2,6 +2,7 @@ package cn.ddcherry.gen.controller;
 
 import cn.ddcherry.common.result.Result;
 import cn.ddcherry.gen.domain.GenTableColumn;
+import cn.ddcherry.gen.domain.TableMetadata;
 import cn.ddcherry.gen.service.GenService;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -21,6 +22,16 @@ public class GenController {
 
     public GenController(GenService genService) {
         this.genService = genService;
+    }
+
+    /**
+     * 查询当前数据库的表列表
+     *
+     * @return 表信息列表
+     */
+    @GetMapping("/tables")
+    public Result<List<TableMetadata>> listTables() {
+        return Result.success(genService.listTables());
     }
 
     /**

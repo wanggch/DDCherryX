@@ -7,9 +7,9 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
  * DDCherryX main application.
  */
 @SpringBootApplication(scanBasePackages = "cn.ddcherry")
-public class DDCherryXApplication {
+public class DDCherryApplication {
 
     public static void main(String[] args) {
-        SpringApplication.run(DDCherryXApplication.class, args);
+        SpringApplication.run(DDCherryApplication.class, args);
     }
 }

@@ -5,6 +5,7 @@ import cn.ddcherry.gen.domain.DatabaseTable;
 import cn.ddcherry.gen.domain.GenTable;
 import cn.ddcherry.gen.domain.GenTableColumn;
 import cn.ddcherry.gen.mapper.GenTableColumnMapper;
+import cn.ddcherry.gen.domain.TableMetadata;
 import cn.ddcherry.gen.mapper.GenTableMapper;
 import cn.ddcherry.gen.service.GenService;
 import cn.ddcherry.gen.template.TemplateRenderer;
@@ -117,6 +118,8 @@ public class GenServiceImpl implements GenService {
     public byte[] download(Long tableId) {
         Map<String, String> generatedFiles = preview(tableId);
         return templateRenderer.zip(generatedFiles);
+    public List<TableMetadata> listTables() {
+        return genTableMapper.selectTables();
     }
 
     private void prepareColumnDefaults(GenTableColumn column) {

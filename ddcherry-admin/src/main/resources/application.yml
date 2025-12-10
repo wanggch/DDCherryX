@@ -1,4 +1,6 @@
 spring:
+  profiles:
+    active: dev
   application:
     name: ddcherry-admin
   datasource:
@@ -6,10 +8,11 @@ spring:
     username: root
     password: root
     driver-class-name: com.mysql.cj.jdbc.Driver
-  redis:
-    host: localhost
-    port: 6379
-    database: 0
+  data:
+    redis:
+      host: localhost
+      port: 6379
+      database: 0
 mybatis-plus:
   mapper-locations: classpath*:/mapper/**/*.xml
   global-config:
@@ -32,7 +35,7 @@ ddcherry:
       format-sql: true
     scan-base-package: cn.ddcherry
 server:
-  port: 8080
+  port: 8100
 management:
   endpoints:
     web:

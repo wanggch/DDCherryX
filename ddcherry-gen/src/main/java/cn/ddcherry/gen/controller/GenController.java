@@ -4,6 +4,7 @@ import cn.ddcherry.common.result.Result;
 import cn.ddcherry.gen.domain.DatabaseTable;
 import cn.ddcherry.gen.domain.GenTable;
 import cn.ddcherry.gen.domain.GenTableColumn;
+import cn.ddcherry.gen.domain.TableMetadata;
 import cn.ddcherry.gen.service.GenService;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import jakarta.validation.Valid;
@@ -51,6 +52,17 @@ public class GenController {
 
     /**
      * 查询指定表的字段列表。
+     * 查询当前数据库的表列表
+     *
+     * @return 表信息列表
+     */
+    @GetMapping("/tables")
+    public Result<List<TableMetadata>> listTables() {
+        return Result.success(genService.listTables());
+    }
+
+    /**
+     * 查询指定表的字段列表
      *
      * @param tableName 数据表名
      * @return 字段列表

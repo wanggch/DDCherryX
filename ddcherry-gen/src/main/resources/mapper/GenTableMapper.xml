@@ -4,6 +4,10 @@
     <!--
         查询指定表的字段列表，包含主键、自增、必填标识等信息。
     -->
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.ddcherry.gen.mapper.GenTableMapper">
+
     <select id="selectTableColumns" resultType="cn.ddcherry.gen.domain.GenTableColumn">
         SELECT
             column_name     AS columnName,
@@ -31,4 +35,15 @@
           AND table_name NOT IN (SELECT table_name FROM gen_table)
         ORDER BY table_name
     </select>
+    <select id="selectTables" resultType="cn.ddcherry.gen.domain.TableMetadata">
+        SELECT
+            table_name    AS tableName,
+            table_comment AS tableComment,
+            create_time   AS createTime,
+            update_time   AS updateTime
+        FROM information_schema.tables
+        WHERE table_schema = (SELECT DATABASE())
+        ORDER BY table_name
+    </select>
+
 </mapper>

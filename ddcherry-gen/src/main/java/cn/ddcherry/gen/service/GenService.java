@@ -4,6 +4,7 @@ import cn.ddcherry.gen.domain.DatabaseTable;
 import cn.ddcherry.gen.domain.GenTable;
 import cn.ddcherry.gen.domain.GenTableColumn;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import cn.ddcherry.gen.domain.TableMetadata;
 
 import java.util.List;
 import java.util.Map;
@@ -67,4 +68,9 @@ public interface GenService {
      * @return 代码压缩包字节流
      */
     byte[] download(Long tableId);
+     * 查询当前数据库的表列表
+     *
+     * @return 表信息集合
+     */
+    List<TableMetadata> listTables();
 }
